@@ -3,4 +3,57 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <display-name>Database Manager</display-name>
+
+    <filter>
+        <filter-name>request-filter</filter-name>
+        <filter-class>com.juja.webapp.teodor.app.filters.RequestFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>request-filter</filter-name>
+        <url-pattern>/</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    
+    <listener>
+        <listener-class>com.juja.webapp.teodor.app.listeneres.ContextListener</listener-class>
+    </listener>
+
+    <listener>
+        <description>sessionListener</description>
+        <listener-class>
+            com.juja.webapp.teodor.app.listeneres.SessionListener
+        </listener-class>
+    </listener>
+
+    <welcome-file-list>
+        <welcome-file>main.html</welcome-file>
+        <welcome-file>main.jsp</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>client-requests</servlet-name>
+        <servlet-class>com.juja.webapp.teodor.app.servlets.Main</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>action-connect</servlet-name>
+        <servlet-class>com.juja.webapp.teodor.app.servlets.DatabaseConnectionService</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>client-requests</servlet-name>
+        <url-pattern>/action/*</url-pattern>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>action-connect</servlet-name>
+        <url-pattern>/connect</url-pattern>
+        <url-pattern>/close</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
