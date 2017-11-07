@@ -1,6 +1,5 @@
 package com.juja.webapp.teodor.controller.response;
 
-import com.juja.webapp.teodor.utils.DebugLoger;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +7,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.juja.webapp.teodor.utils.Logger.error;
+import static com.juja.webapp.teodor.utils.Logger.info;
+
 public class ResponseProcessor {
+	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ResponseProcessor.class);
 
 	public void sendErrorResponse(
 			DataBaseRequestException error, HttpServletRequest req, HttpServletResponse resp, String message) {
@@ -36,11 +39,11 @@ public class ResponseProcessor {
 		try {
 			PrintWriter writer = resp.getWriter();
 
-			DebugLoger.tr("JSON" + json.JSONString());
+			info(logger, "Send response: " + json.JSONString());
+
 			writer.print(json.JSONString() );
 		} catch (IOException e) {
-			// TODO
-			e.printStackTrace();
+			error(logger, "", e);
 		}
 	}
 

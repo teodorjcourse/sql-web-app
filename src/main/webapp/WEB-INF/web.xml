@@ -8,7 +8,7 @@
 
     <filter>
         <filter-name>request-filter</filter-name>
-        <filter-class>com.juja.webapp.teodor.app.filters.RequestFilter</filter-class>
+        <filter-class>com.juja.webapp.teodor.components.filters.RequestFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -18,13 +18,13 @@
     </filter-mapping>
     
     <listener>
-        <listener-class>com.juja.webapp.teodor.app.listeneres.ContextListener</listener-class>
+        <listener-class>com.juja.webapp.teodor.components.listeneres.ContextListener</listener-class>
     </listener>
 
     <listener>
         <description>sessionListener</description>
         <listener-class>
-            com.juja.webapp.teodor.app.listeneres.SessionListener
+            com.juja.webapp.teodor.components.listeneres.SessionListener
         </listener-class>
     </listener>
 
@@ -35,12 +35,12 @@
 
     <servlet>
         <servlet-name>client-requests</servlet-name>
-        <servlet-class>com.juja.webapp.teodor.app.servlets.Main</servlet-class>
+        <servlet-class>com.juja.webapp.teodor.components.servlets.Main</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>action-connect</servlet-name>
-        <servlet-class>com.juja.webapp.teodor.app.servlets.DatabaseConnectionService</servlet-class>
+        <servlet-class>com.juja.webapp.teodor.components.servlets.DatabaseConnectionService</servlet-class>
     </servlet>
 
     <servlet-mapping>
