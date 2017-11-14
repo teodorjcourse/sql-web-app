@@ -24,6 +24,9 @@ public class Commands {
             case "insert":
                 new InsertRowCommand(req, resp).execute();
                 break;
+            case "update":
+                new UpdateTableCommand(req, resp).execute();
+                break;
 
         }
     }

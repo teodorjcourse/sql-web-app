@@ -89,41 +89,41 @@ public class PostgreSQLManager extends DataBaseManager {
 
 		return request.queryResult();
 	}
-//
-//	@Override
-//	public int updateRows(String tableName, String column, String value, String[] keyValue)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder set = prepareSet(keyValue);
-//		StringBuilder condition = new StringBuilder();
-//		condition.append(column).append("=").append("'").append(value).append("'");
-//
-//		String sqlQuery = String.format(UPDATE_RECORD_REQUEST_TEMPLATE, tableName,  set.toString(), condition.toString());
-//		return executeUpdate(sqlQuery);
-//	}
-//
-//	private StringBuilder prepareSet(String[] keyValue)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder result = new StringBuilder();
-//
-//		for (int index = 0; index < keyValue.length; index = index + 2) {
-//			if (nullOrEmpty(keyValue[index])) {
-//				throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
-//			}
-//
-//			result.append(keyValue[index]);
-//			if (nullOrEmpty(keyValue[index + 1])) {
-//				result.append(DEFAULT_VALUE);
-//			} else {
-//				result.append("=");
-//				result.append("'").append(keyValue[index + 1]).append("'");
-//			}
-//		}
-//
-//		return result;
-//	}
-//
+
+	@Override
+	public int updateRows(Connection connection, String tableName, String column, String value, String[] keyValue)
+			throws DataBaseRequestException
+	{
+		StringBuilder set = prepareSet(keyValue);
+		StringBuilder condition = new StringBuilder();
+		condition.append(column).append("=").append("'").append(value).append("'");
+
+		String sqlQuery = String.format(UPDATE_RECORD_REQUEST_TEMPLATE, tableName,  set.toString(), condition.toString());
+		return executeUpdate(connection, sqlQuery);
+	}
+
+	private StringBuilder prepareSet(String[] keyValue)
+			throws DataBaseRequestException
+	{
+		StringBuilder result = new StringBuilder();
+
+		for (int index = 0; index < keyValue.length; index = index + 2) {
+			if (nullOrEmpty(keyValue[index])) {
+				throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
+			}
+
+			result.append(keyValue[index]);
+			if (nullOrEmpty(keyValue[index + 1])) {
+				result.append(DEFAULT_VALUE);
+			} else {
+				result.append("=");
+				result.append("'").append(keyValue[index + 1]).append("'");
+			}
+		}
+
+		return result;
+	}
+
 //	@Override
 //	public int deleteRows(String tableName, String[] params)
 //			throws DataBaseRequestException
@@ -203,30 +203,30 @@ public class PostgreSQLManager extends DataBaseManager {
         return new Table(columns, rows);
     }
 
-//	private int executeUpdate(String sqlQuery)
-//			throws DataBaseRequestException
-//	{
-//		checkConnection();
-//
-//		int result = 0;
-//
-//		try (Statement statement = connection.createStatement()) {
-//			try {
-//				result = statement.executeUpdate(sqlQuery);
-//			} catch (SQLException e) {
-//				handleSqlError(e, sqlQuery);
-//			}
-//
-//		} catch (SQLException e) {
-//			DataBaseRequestException requestException =
-//					new DataBaseRequestException(RequestError.CREATE_STATEMENT_ERROR);
-//			requestException.addSuppressed(e);
-//
-//			throw requestException;
-//		}
-//
-//		return result;
-//	}
+	private int executeUpdate(Connection connection, String sqlQuery)
+			throws DataBaseRequestException
+	{
+		checkConnection(connection);
+
+		int result = 0;
+
+		try (Statement statement = connection.createStatement()) {
+			try {
+				result = statement.executeUpdate(sqlQuery);
+			} catch (SQLException e) {
+				errorHandler.handleSqlError(e, sqlQuery);
+			}
+
+		} catch (SQLException e) {
+			DataBaseRequestException requestException =
+					new DataBaseRequestException(RequestError.CREATE_STATEMENT_ERROR);
+			requestException.addSuppressed(e);
+
+			throw requestException;
+		}
+
+		return result;
+	}
 
     private void execute(AbstractQueryAction request)
             throws DataBaseRequestException

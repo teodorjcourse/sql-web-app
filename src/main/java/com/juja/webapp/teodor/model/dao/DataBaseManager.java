@@ -24,5 +24,5 @@ public abstract class DataBaseManager {
 
 	public abstract Table selectTable(Connection connection, String tableName) throws DataBaseRequestException;
 
-//	public abstract int updateRows(String tableName, String column, String value, String[] keyValue) throws DataBaseRequestException;
+	public abstract int updateRows(Connection connection, String tableName, String column, String value, String[] keyValue) throws DataBaseRequestException;
 }
