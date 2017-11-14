@@ -49,7 +49,7 @@ public class InsertRowCommand extends Command {
             JSONResponse json = rp.buildSuccessJSON();
 
             if (!result.isEmpty()) {
-                json.setKeyValue("uid", "row:" + result.result());
+                json.setKeyValue("uid", "row_" + result.result());
                 json.setKeyValue("class", "clickable-row");
             } else {
                 json.setKeyValue("class", "not-clickable-row");
