@@ -15,9 +15,13 @@ public interface Keys {
 
     String PAGE_TITLE_CONNECT = "page_title_connect";
     String PAGE_CONNECT_INFO_TXT = "page_connect_info";
+    String PAGE_TITLE_TABLES= "page_title_tables";
 
     String USERNAME_REQUIRED_ERROR_TXT = "username_required_error_txt";
     String PASSWORD_REQUIRED_ERROR_TXT = "password_required_error_txt";
 
     String DATABASE_CONNECT_ERROR_TXT = "database_connect_error_txt";
+
+    String MENU_ITEM_TABLES = "menu_item_tables";
+    String MENU_ITEM_INFO = "menu_item_info";
 }

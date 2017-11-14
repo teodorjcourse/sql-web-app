@@ -2,6 +2,9 @@ package com.juja.webapp.teodor.components.servlets;
 import com.juja.webapp.teodor.Links;
 import com.juja.webapp.teodor.WebAppAttributes;
 import com.juja.webapp.teodor.controller.UserSession;
+import com.juja.webapp.teodor.controller.commands.Commands;
+import com.juja.webapp.teodor.controller.response.ResponseProcessor;
+import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import com.juja.webapp.teodor.utils.StringUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -29,12 +32,9 @@ public class Main extends HttpServletBase  {
 
         try {
             if (userSession.connected()) {
-                trInfo(logger, session.getId() + ": is connected. Redirect to main.jsp");
-
-                RequestDispatcher dispatcher = req.getRequestDispatcher(Links.MAIN_JSP);
-                dispatcher.forward(req, resp);
+                onGotRequest(req, resp);
             } else {
-                trInfo(logger, session.getId() + ": doesn't connected. Redirect to connect.jsp");
+                trInfo(logger, session.getId() + ": doesn't connected. Redirect to Connect.jsp");
 
                 RequestDispatcher dispatcher = req.getRequestDispatcher(Links.CONNECT_JSP);
                 dispatcher.forward(req, resp);
@@ -53,31 +53,32 @@ public class Main extends HttpServletBase  {
         onGotRequest(req, resp);
     }
 
-    private void onGotRequest(HttpServletRequest req, HttpServletResponse resp) {
-        String requestType = StringUtils.removeSlashes(req.getServletPath());
+    private void onGotRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String actionType = req.getPathInfo();
 
-        HttpSession session = req.getSession();
-
-        trInfo(logger, session.getId() + ": request parameters; uri = " + req.getQueryString());
-
-        switch (requestType) {
-            case REQUEST_TYPE: {
-                if (actionType != null) {
-                    try {
-                        trInfo(logger, session.getId() + ": request_type = " + requestType + "; action_type = " + actionType + ".");
-                        trInfo(logger, session.getId() + ": redirect to /" + actionType);
-
-                        req.getRequestDispatcher("/" + actionType).forward(req, resp);
-                    } catch (ServletException | IOException e) {
-                        trError(logger, session.getId() + ": error.", e);
-                    }
-                } else {
-                    trWarn(logger, session.getId() + ": action type is not specified");
+        if (actionType != null) {
+            String cmd = StringUtils.removeSlashes(actionType);
+            if (cmd != null) {
+                try {
+                    new Commands().tryToExecute(cmd, req, resp);
+                } catch (DataBaseRequestException e) {
+                    processDatabaseRequestError(e, req, resp);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            break;
+        } else {
+            RequestDispatcher dispatcher = req.getRequestDispatcher(Links.MAIN_JSP);
+            dispatcher.forward(req, resp);
+        }
 
+    }
+
+    private void processDatabaseRequestError(DataBaseRequestException e, HttpServletRequest req, HttpServletResponse resp) {
+	    if (req.getMethod().equals("POST")) {
+	        new ResponseProcessor().sendErrorResponse(e, req, resp, e.getMessage());
+        } else {
+	        e.printStackTrace();
         }
     }
 }

@@ -5,6 +5,9 @@ public class StringUtils {
         return source.replaceAll("/", "");
     }
 
+    public static boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().length() == 0;
+    }
 
     private StringUtils() {}
 }

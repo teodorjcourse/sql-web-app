@@ -41,7 +41,7 @@ public class ResponseProcessor {
 
 			info(logger, "Send response: " + json.JSONString());
 
-			writer.print(json.JSONString() );
+			writer.print(json.JSONString());
 		} catch (IOException e) {
 			error(logger, "", e);
 		}

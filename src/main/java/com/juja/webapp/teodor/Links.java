@@ -8,10 +8,9 @@ public interface Links {
 
     String ROOT_WEB_APP = "/sql-web-app";
 
-    String CONNECT_JSP = "/jsp/connect.jsp";
-    String MAIN_JSP = "/jsp/main.jsp";
+    String CONNECT_JSP = "/jsp/Connect.jsp";
+    String MAIN_JSP = "/jsp/Main.jsp";
 
-    // TODO Props ?
     String ACTION_CONNECT_REQUEST = "/sql-web-app/action/connect?";
     String ACTION_CLOSE_CONNECTION_REQUEST = "/sql-web-app/action/close?";
     String ACTION_GET_TABLES_REQUEST = "/sql-web-app/action/get_tables?";

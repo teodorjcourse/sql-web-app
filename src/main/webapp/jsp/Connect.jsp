@@ -1,9 +1,12 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<%@ page import="com.juja.webapp.teodor.I18n" %>
-<%@ page import="com.juja.webapp.teodor.Keys" %>
-
-<%-- Do not remove this import. It's needed for included connection_form.jsp --%>
-<%@ page import="com.juja.webapp.teodor.Links" %>
+<%@ page
+        contentType="text/html;charset=UTF-8"
+        language="java"
+        pageEncoding="UTF-8"
+        import="
+        com.juja.webapp.teodor.I18n,
+        com.juja.webapp.teodor.Keys,
+        com.juja.webapp.teodor.Links"
+%>
 
 <html>
 <head>
