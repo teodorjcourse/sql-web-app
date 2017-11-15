@@ -104,7 +104,7 @@ public class HTMLTableFormatter {
 
 		for (int i = 0; i < table.rows().size(); i++) {
 			builder.append("<tr  class=\"" + rowClass + "\"");
-			builder.append(uidIndex != -1 ? "id=\"row:"+ table.row(i).cells().get(uidIndex).value() + "\">" : "\">");
+			builder.append(uidIndex != -1 ? "id=\"row_"+ table.row(i).cells().get(uidIndex).value() + "\">" : "\">");
 			row(i, builder);
 			builder.append("</tr>");
 		}
@@ -141,9 +141,9 @@ public class HTMLTableFormatter {
 				continue;
 			}
 
-			builder.append("<th name=\"" + rowCells.get(i).key() +"\">");
+			builder.append("<td name=\"" + rowCells.get(i).key() +"\">");
 			builder.append(rowCells.get(i).value());
-			builder.append("</th>");
+			builder.append("</td>");
 		}
 //		builder.append("</tr>");
 

@@ -75,17 +75,17 @@
             });
 
             $('#table').on('click', '.clickable-row', function(event) {
-                if($(this).hasClass('active')){
+                if($(this).hasClass('bg-primary')){
                     rowId = null;
 
-                    $(this).removeClass('active');
+                    $(this).removeClass('bg-primary');
 
                     $('#button-edit').prop('disabled', true);
                     $('#button-delete').prop('disabled', true);
                 } else {
                     rowId = this.id;
 
-                    $(this).addClass('active').siblings().removeClass('active');
+                    $(this).addClass('bg-primary').siblings().removeClass('bg-primary');
 
                     $('#button-edit').prop('disabled', false);
                     $('#button-delete').prop('disabled', false);
@@ -294,9 +294,9 @@
 
                     var $input = $(this);
 
-                    newElement += "<th name='" + $input.attr("id") + "'>";
+                    newElement += "<td name='" + $input.attr("id") + "'>";
                     newElement += $input.val();
-                    newElement += "</th>";
+                    newElement += "</td>";
 
                     queryString += $input.attr("id") + "=" + $input.val();
                 });
