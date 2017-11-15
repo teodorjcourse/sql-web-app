@@ -34,40 +34,6 @@ public class PostgreSQLManager extends DataBaseManager {
 		this.errorHandler = errorHandler;
 	}
 
-//
-//	@Override
-//	public void createTable(String tableName, String... columns)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder sb = new StringBuilder();
-//
-//		for (int index = 0; index < columns.length; index++) {
-//			if (index > 0) {
-//				sb.append(", ");
-//			}
-//			sb.append(columns[index]).append(" TEXT");
-//		}
-//
-//		String sqlQuery = String.format(CREATE_TABLE_REQUEST_TEMPLATE, tableName, sb.toString());
-//		execute(sqlQuery);
-//	}
-//
-//	@Override
-//	public void dropTable(String tableName)
-//			throws DataBaseRequestException
-//	{
-//		String sqlQuery = String.format(DROP_TABLE_REQUEST_TEMPLATE, tableName);
-//		execute(sqlQuery);
-//	}
-//
-//	@Override
-//	public void clearTable(String tableName)
-//			throws DataBaseRequestException
-//	{
-//		String sqlQuery = String.format(DELETE_TABLE_REQUEST_TEMPLATE, tableName);
-//		execute(sqlQuery);
-//	}
-//
 	@Override
 	public QueryActionResult insertRow(Connection connection, String tableName, String[] keyValue)
 			throws DataBaseRequestException
@@ -89,80 +55,80 @@ public class PostgreSQLManager extends DataBaseManager {
 
 		return request.queryResult();
 	}
-//
-//	@Override
-//	public int updateRows(String tableName, String column, String value, String[] keyValue)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder set = prepareSet(keyValue);
-//		StringBuilder condition = new StringBuilder();
-//		condition.append(column).append("=").append("'").append(value).append("'");
-//
-//		String sqlQuery = String.format(UPDATE_RECORD_REQUEST_TEMPLATE, tableName,  set.toString(), condition.toString());
-//		return executeUpdate(sqlQuery);
-//	}
-//
-//	private StringBuilder prepareSet(String[] keyValue)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder result = new StringBuilder();
-//
-//		for (int index = 0; index < keyValue.length; index = index + 2) {
-//			if (nullOrEmpty(keyValue[index])) {
-//				throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
-//			}
-//
-//			result.append(keyValue[index]);
-//			if (nullOrEmpty(keyValue[index + 1])) {
-//				result.append(DEFAULT_VALUE);
-//			} else {
-//				result.append("=");
-//				result.append("'").append(keyValue[index + 1]).append("'");
-//			}
-//		}
-//
-//		return result;
-//	}
-//
-//	@Override
-//	public int deleteRows(String tableName, String[] params)
-//			throws DataBaseRequestException
-//	{
-//		String sqlQuery = String.format(
-//				DELETE_RECORD_REQUEST_TEMPLATE,
-//				tableName,
-//				prepareDeleteRowConditions(params)
-//		);
-//
-//		return executeUpdate(sqlQuery);
-//	}
-//
-//	private String prepareDeleteRowConditions(String[] params)
-//			throws DataBaseRequestException
-//	{
-//		StringBuilder preparedString = new StringBuilder();
-//
-//		for (int index = 0; index < params.length; index = index + 2) {
-//			if (index > 0) {
-//				preparedString.append(" OR ");
-//			}
-//			if (index % 2 == 0) {
-//				if (nullOrEmpty(params[index])) {
-//					throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
-//				}
-//
-//				preparedString.append(params[index]);
-//				if (nullOrEmpty(params[index + 1])) {
-//					preparedString.append(" IS NULL");
-//				} else {
-//					preparedString.append("=");
-//					preparedString.append("'").append(params[index + 1]).append("'");
-//				}
-//			}
-//		}
-//
-//		return preparedString.toString();
-//	}
+
+	@Override
+	public int updateRows(Connection connection, String tableName, String column, String value, String[] keyValue)
+			throws DataBaseRequestException
+	{
+		StringBuilder set = prepareSet(keyValue);
+		StringBuilder condition = new StringBuilder();
+		condition.append(column).append("=").append("'").append(value).append("'");
+
+		String sqlQuery = String.format(UPDATE_RECORD_REQUEST_TEMPLATE, tableName,  set.toString(), condition.toString());
+		return executeUpdate(connection, sqlQuery);
+	}
+
+	private StringBuilder prepareSet(String[] keyValue)
+			throws DataBaseRequestException
+	{
+		StringBuilder result = new StringBuilder();
+
+		for (int index = 0; index < keyValue.length; index = index + 2) {
+			if (nullOrEmpty(keyValue[index])) {
+				throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
+			}
+
+			result.append(keyValue[index]);
+			if (nullOrEmpty(keyValue[index + 1])) {
+				result.append(DEFAULT_VALUE);
+			} else {
+				result.append("=");
+				result.append("'").append(keyValue[index + 1]).append("'");
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public int deleteRows(Connection connection, String tableName, String[] params)
+			throws DataBaseRequestException
+	{
+		String sqlQuery = String.format(
+				DELETE_RECORD_REQUEST_TEMPLATE,
+				tableName,
+				prepareDeleteRowConditions(params)
+		);
+
+		return executeUpdate(connection, sqlQuery);
+	}
+
+	private String prepareDeleteRowConditions(String[] params)
+			throws DataBaseRequestException
+	{
+		StringBuilder preparedString = new StringBuilder();
+
+		for (int index = 0; index < params.length; index = index + 2) {
+			if (index > 0) {
+				preparedString.append(" OR ");
+			}
+			if (index % 2 == 0) {
+				if (nullOrEmpty(params[index])) {
+					throw new DataBaseRequestException(RequestError.CMD_ARG_ERROR);
+				}
+
+				preparedString.append(params[index]);
+				if (nullOrEmpty(params[index + 1])) {
+					preparedString.append(" IS NULL");
+				} else {
+					preparedString.append("=");
+					preparedString.append("'").append(params[index + 1]).append("'");
+				}
+			}
+		}
+
+		return preparedString.toString();
+	}
 
 	@Override
 	public Table selectTable(Connection connection, String tableName)
@@ -203,30 +169,30 @@ public class PostgreSQLManager extends DataBaseManager {
         return new Table(columns, rows);
     }
 
-//	private int executeUpdate(String sqlQuery)
-//			throws DataBaseRequestException
-//	{
-//		checkConnection();
-//
-//		int result = 0;
-//
-//		try (Statement statement = connection.createStatement()) {
-//			try {
-//				result = statement.executeUpdate(sqlQuery);
-//			} catch (SQLException e) {
-//				handleSqlError(e, sqlQuery);
-//			}
-//
-//		} catch (SQLException e) {
-//			DataBaseRequestException requestException =
-//					new DataBaseRequestException(RequestError.CREATE_STATEMENT_ERROR);
-//			requestException.addSuppressed(e);
-//
-//			throw requestException;
-//		}
-//
-//		return result;
-//	}
+	private int executeUpdate(Connection connection, String sqlQuery)
+			throws DataBaseRequestException
+	{
+		checkConnection(connection);
+
+		int result = 0;
+
+		try (Statement statement = connection.createStatement()) {
+			try {
+				result = statement.executeUpdate(sqlQuery);
+			} catch (SQLException e) {
+				errorHandler.handleSqlError(e, sqlQuery);
+			}
+
+		} catch (SQLException e) {
+			DataBaseRequestException requestException =
+					new DataBaseRequestException(RequestError.CREATE_STATEMENT_ERROR);
+			requestException.addSuppressed(e);
+
+			throw requestException;
+		}
+
+		return result;
+	}
 
     private void execute(AbstractQueryAction request)
             throws DataBaseRequestException

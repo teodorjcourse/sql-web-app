@@ -8,21 +8,14 @@ import java.sql.Connection;
 import java.util.List;
 
 public abstract class DataBaseManager {
+	public abstract QueryActionResult insertRow(Connection connection, String tableName, String[] keyValue) throws DataBaseRequestException;
+  	public abstract QueryActionResult insertRow(Connection connection, String tableName, String[] keyValue, String[] columnNames) throws DataBaseRequestException;
 
-//	public abstract void createTable(String tableName, String[] columns) throws DataBaseRequestException;
-//
-//	public abstract void clearTable(String tableName) throws DataBaseRequestException;
-//
-  public abstract QueryActionResult insertRow(Connection connection, String tableName, String[] keyValue) throws DataBaseRequestException;
-  public abstract QueryActionResult insertRow(Connection connection, String tableName, String[] keyValue, String[] columnNames) throws DataBaseRequestException;
-//
-//	public abstract int deleteRows(String tableName, String[] params) throws DataBaseRequestException;
-//
-//	public abstract void dropTable(String tableName) throws DataBaseRequestException;
+	public abstract int deleteRows(Connection connection, String tableName, String[] params) throws DataBaseRequestException;
 
 	public abstract List<String> getTables(Connection connection) throws DataBaseRequestException;
 
 	public abstract Table selectTable(Connection connection, String tableName) throws DataBaseRequestException;
 
-//	public abstract int updateRows(String tableName, String column, String value, String[] keyValue) throws DataBaseRequestException;
+	public abstract int updateRows(Connection connection, String tableName, String column, String value, String[] keyValue) throws DataBaseRequestException;
 }

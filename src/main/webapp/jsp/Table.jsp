@@ -17,6 +17,7 @@
     <%!
         public static final Logger logger  = Logger.getLogger(getCurrentClassName());
     %>
+    <h1>Режим редактирования таблиц: ${tableName}</h1>
 
     <div class="modal fade" id="modal-form" role="dialog" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog">
@@ -54,7 +55,7 @@
     <div>
         <button id="button-new" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">New</button>
         <button id="button-edit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">Edit</button>
-        <button id="button-delete" type="button" class="btn btn-primary">Delete</button>
+        <button id="button-delete" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-form">Delete</button>
     </div>
 
     <table id="table" class="table table-bordered" cellspacing="0" width="100%">
@@ -195,7 +196,24 @@
         function onDeleteRowButtonClick(event) {
             event.preventDefault();
 
-            sendAsyncDelete(event);
+            var params = {};
+            params["action_button"] = {
+                label: "Delete",
+                callback: sendAsyncDelete
+            };
+
+            params["table_data"] = [];
+
+            var $row = $('#' + rowId);
+            var columns = $row.children();
+
+            for (var i = 0; i < columns.length; i++) {
+                var data = {};
+                data[columns[i].attributes["name"].value] = columns[i].innerHTML;
+                params["table_data"].push(data)
+            }
+
+            createEntryForm(params);
         }
 
         function createEntryForm(params) {
@@ -241,9 +259,47 @@
         }
 
 
-
         function sendAsyncUpdate(event) {
-            alert("sendAsyncUpdate");
+            event.preventDefault();
+
+            $('#modal-form').modal('hide');
+
+            var request = new XMLHttpRequest();
+
+            try {
+                request.onreadystatechange = function () {
+                    if (this.readyState == XMLHttpRequestState.DONE) {
+                        try {
+                            var obj = JSON.parse(this.responseText);
+                            console.log(this.responseText);
+                        } catch (error) {
+                        }
+                    }
+                }
+            } catch(error) {
+
+            }
+
+            var queryString = "";
+            var $selectedRow = $("#" + rowId);
+
+            $("#fields :input").each(function(){
+                if (queryString != "") {
+                    queryString+="&";
+                }
+
+                var $input = $(this);
+
+                $selectedRow.find("td[name='" +  $input.attr("id")+ "']").text($input.val());
+
+                queryString += $input.attr("id") + "=" + $input.val();
+            });
+
+            var keyValue =  rowId.split("_")[1];
+
+
+            request.open("POST", "${pageContext.request.contextPath}/action/update?name=${tableName}&updateData=" +  encodeURIComponent(queryString) + "&uid=" + keyValue, true);
+            request.send(null);
         }
 
         function sendAsyncCreate(event) {
@@ -315,7 +371,31 @@
         }
 
         function sendAsyncDelete(event) {
-            alert("sendAsyncDelete");
+            $('#modal-form').modal('hide');
+
+            var request = new XMLHttpRequest();
+
+            try {
+                request.onreadystatechange = function () {
+                    if (this.readyState == XMLHttpRequestState.DONE) {
+                        try {
+                            var obj = JSON.parse(this.responseText);
+
+                            if (obj != null) {
+                                $("#row_" + obj["uid"]).remove();
+                            }
+                        } catch (error) {
+                        }
+                    }
+                }
+            } catch (error) {
+
+            }
+
+            var cond = "uid=" + rowId.split("_")[1];
+
+            request.open("POST", "${pageContext.request.contextPath}/action/delete?name=${tableName}&where=" + encodeURIComponent(cond), true);
+            request.send(null);
         }
 
     </script>
