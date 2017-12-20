@@ -1,5 +1,4 @@
 package com.juja.webapp.teodor.components.listeneres;
-import com.juja.webapp.teodor.controller.UserSession;
 import com.juja.webapp.teodor.utils.Logger;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
@@ -13,8 +12,7 @@ import javax.servlet.http.HttpSessionListener;
 import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
 
 /**
- * SessionListener will create userSession object and store it at session attributes to handle connection state all over the
- * servlets.
+ *
  * When user session is expired SessionListener will close connection and remove all attributes associated with session.
  */
 public class SessionListener implements HttpSessionListener {
@@ -22,14 +20,7 @@ public class SessionListener implements HttpSessionListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-        HttpSession session = se.getSession();
-
-        Logger.info(logger, "Create session: id = " + session.getId());
-
-        UserSession userSession = new UserSession(session);
-        session.setAttribute(WebAppAttributes.USER_SESSION, userSession);
-
-		Logger.info(logger, "Create session: id = " + session.getId() + " done");
+        Logger.info(logger, "Session created: id = " + se.getSession().getId());
 	}
 
 	public void sessionDestroyed(HttpSessionEvent se) {

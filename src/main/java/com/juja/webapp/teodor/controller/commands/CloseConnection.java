@@ -2,6 +2,7 @@ package com.juja.webapp.teodor.controller.commands;
 import com.juja.webapp.teodor.Links;
 import com.juja.webapp.teodor.controller.response.JSONResponse;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
+import com.juja.webapp.teodor.model.dao.ConnectionInfo;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 
 import javax.servlet.ServletException;
@@ -23,8 +24,10 @@ public class CloseConnection extends Command {
 	protected void executeInternal() throws DataBaseRequestException, ServletException, IOException {
 		trInfo(logger, httpRequest.getSession().getId() + ": close database connection");
 
+		ConnectionInfo connectionInfo = connectionManager().getSessionConnectionInfo(httpRequest.getSession());
+
 		try {
-			if (userSession().connected()) {
+			if (connectionInfo != null && connectionInfo.connected()) {
 				try {
 					trInfo(logger, httpRequest.getSession().getId() + ": try to close database connection");
 					connectionManager().closeConnection(httpRequest.getSession());

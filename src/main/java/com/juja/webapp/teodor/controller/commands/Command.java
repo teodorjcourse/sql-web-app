@@ -2,7 +2,6 @@ package com.juja.webapp.teodor.controller.commands;
 
 
 import com.juja.webapp.teodor.WebAppAttributes;
-import com.juja.webapp.teodor.controller.UserSession;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.dao.DataBaseManager;
@@ -59,15 +58,6 @@ public abstract class Command {
 
 		return ID.equals((String)obj);
 	}
-
-
-    public final UserSession userSession() {
-        return userSession(httpRequest.getSession());
-    }
-
-    public final UserSession userSession(HttpSession httpSession) {
-        return (UserSession) httpSession.getAttribute(WebAppAttributes.USER_SESSION);
-    }
 
     public final ConnectionManager connectionManager() {
         return connectionManager(httpRequest.getSession());

@@ -3,12 +3,13 @@ package com.juja.webapp.teodor.controller.commands;
 import com.juja.webapp.teodor.I18n;
 import com.juja.webapp.teodor.Keys;
 import com.juja.webapp.teodor.Links;
-import com.juja.webapp.teodor.controller.UserSession;
 import com.juja.webapp.teodor.controller.response.JSONResponse;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
+import com.juja.webapp.teodor.model.dao.ConnectionInfo;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,44 +39,44 @@ public class ConnectCommand extends Command {
             throws DataBaseRequestException, ServletException, IOException
     {
         HttpSession httpSessoin = httpRequest.getSession();
-        UserSession userSession = userSession();
+
+        ServletContext servletContext = httpSessoin.getServletContext();
+        ConnectionManager connectionManager = connectionManager();
+
+        ConnectionInfo connectionInfo = connectionManager.getSessionConnectionInfo(httpSessoin);
+
 
         trInfo(logger, httpSessoin.getId() + ": seting up database connection");
 
-        if (userSession != null) {
-            ResponseProcessor responseProcessor = new ResponseProcessor();
-            try {
-                if (userSession.connected()) {
+        ResponseProcessor responseProcessor = new ResponseProcessor();
+        try {
+            if (connectionInfo != null && connectionInfo.connected()) {
 
-                    trInfo(logger, httpSessoin.getId() + ": is connected. Redirect to Main.jsp");
+                trInfo(logger, httpSessoin.getId() + ": is connected. Redirect to Main.jsp");
 
-                    httpResponse.sendRedirect(Links.MAIN_JSP);
-                } else {
-                    String username = httpRequest.getParameter(USERNAME);
-                    String password = httpRequest.getParameter(PASSWORD);
+                httpResponse.sendRedirect(Links.MAIN_JSP);
+            } else {
+                String username = httpRequest.getParameter(USERNAME);
+                String password = httpRequest.getParameter(PASSWORD);
 
-                    ConnectionManager connectionManager = connectionManager();
-                    try {
-                        trInfo(logger, httpSessoin.getId() + ": trying to create connection with params: username = " + username + ", password = " + password);
+                try {
+                    trInfo(logger, httpSessoin.getId() + ": trying to create connection with params: username = " + username + ", password = " + password);
 
-                        connectionManager.createConnection(httpSessoin, username, password);
+                    connectionManager.createConnection(httpSessoin, username, password);
 
-                        trInfo(logger, httpSessoin.getId() + ": connection has been successfully created");
+                    trInfo(logger, httpSessoin.getId() + ": connection has been successfully created");
 
-                        sendResponseRedirectInfo(httpResponse);
-                    } catch (DataBaseRequestException e) {
-                        trError(logger, httpSessoin.getId() + ": error happend while create connection attempt", e);
+                    sendResponseRedirectInfo(httpResponse);
+                } catch (DataBaseRequestException e) {
+                    trError(logger, httpSessoin.getId() + ": error happend while create connection attempt", e);
 
-                        responseProcessor.sendErrorResponse(e, httpRequest, httpResponse, I18n.text(Keys.DATABASE_CONNECT_ERROR_TXT));
-                    }
-
+                    responseProcessor.sendErrorResponse(e, httpRequest, httpResponse, I18n.text(Keys.DATABASE_CONNECT_ERROR_TXT));
                 }
-            } catch (SQLException e) {
-                // Do nothing if exception was coused do to userSession.connected() operation
-                trError(logger, "", e);
+
             }
-        } else {
-            trWarn(logger, "user sessoin doesn't exist");
+        } catch (SQLException e) {
+            // Do nothing if exception was coused do to userSession.connected() operation
+            trError(logger, "", e);
         }
     }
 

@@ -1,9 +1,10 @@
 package com.juja.webapp.teodor.components.servlets;
 import com.juja.webapp.teodor.Links;
 import com.juja.webapp.teodor.WebAppAttributes;
-import com.juja.webapp.teodor.controller.UserSession;
 import com.juja.webapp.teodor.controller.commands.Commands;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
+import com.juja.webapp.teodor.model.dao.ConnectionInfo;
+import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import com.juja.webapp.teodor.utils.StringUtils;
 
@@ -28,10 +29,14 @@ public class Main extends HttpServletBase  {
 
         trInfo(logger, session.getId() + ": got request; uri = " + req.getRequestURI());
 
-        UserSession userSession = (UserSession) session.getAttribute(WebAppAttributes.USER_SESSION);
+        ConnectionManager connectionManager = (ConnectionManager) session.getServletContext()
+                .getAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
+
+        ConnectionInfo connectionInfo = connectionManager.getSessionConnectionInfo(session);
+
 
         try {
-            if (userSession.connected()) {
+            if (connectionInfo != null && connectionInfo.connected()) {
                 onGotRequest(req, resp);
             } else {
                 trInfo(logger, session.getId() + ": doesn't connected. Redirect to Connect.jsp");
