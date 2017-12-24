@@ -1,7 +1,6 @@
 package com.juja.webapp.teodor;
 
 public interface Links {
-    String DATABASE_PROPERTIES = "/postgresql.properties";
 
     String MAIN_SERVLET = "/main";
 

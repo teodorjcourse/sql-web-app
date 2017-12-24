@@ -21,7 +21,6 @@ import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
 public class Main extends HttpServletBase  {
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(getCurrentClassName());
 
-    private final static String REQUEST_TYPE = "action";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

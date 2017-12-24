@@ -1,6 +1,5 @@
 package com.juja.webapp.teodor.model.dao;
 
-import com.juja.webapp.teodor.model.Configuration;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import com.juja.webapp.teodor.model.exceptions.RequestError;
 
@@ -12,11 +11,11 @@ import java.util.HashMap;
 
 public class ConnectionManager {
 	private SqlErrorHandler errorHandler;
-	private Configuration configuration;
+	private DatabaseConfiguration configuration;
 
 	private HashMap<HttpSession, ConnectionInfo> activeConnections;
 
-	public ConnectionManager(Configuration configuration, SqlErrorHandler errorHandler) {
+	public ConnectionManager(DatabaseConfiguration configuration, SqlErrorHandler errorHandler) {
 		this.activeConnections = new HashMap<>();
 		this.errorHandler = errorHandler;
 		this.configuration = configuration;

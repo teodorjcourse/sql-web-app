@@ -20,6 +20,11 @@
         <listener-class>com.juja.webapp.teodor.components.listeneres.ContextListener</listener-class>
     </listener>
 
+    <context-param>
+        <param-name>databaseProperties</param-name>
+        <param-value>postgresql.properties</param-value>
+    </context-param>
+
     <listener>
         <description>sessionListener</description>
         <listener-class>
