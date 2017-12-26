@@ -7,6 +7,7 @@ import com.juja.webapp.teodor.model.dao.table.Row;
 import com.juja.webapp.teodor.model.dao.table.Table;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import com.juja.webapp.teodor.model.exceptions.RequestError;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * https://www.postgresql.org/docs/10/static/sql-commands.html
  */
+@Service(value = "postgresqlManager")
 public class PostgreSQLManager extends DataBaseManager {
     private static final String[] NO_RETURNING_COLUMNS = new String[0];
 

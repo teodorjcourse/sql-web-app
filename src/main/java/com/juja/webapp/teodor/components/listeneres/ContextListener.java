@@ -1,15 +1,14 @@
 package com.juja.webapp.teodor.components.listeneres;
 
-import com.juja.webapp.teodor.model.FilePropertiesDatabaseConfiguration;
-import com.juja.webapp.teodor.model.PropertiesLoader;
 import com.juja.webapp.teodor.model.dao.*;
 import com.juja.webapp.teodor.utils.Logger;
-import com.juja.webapp.teodor.WebAppAttributes;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.IOException;
 
 import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
 
@@ -21,44 +20,32 @@ import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
  * stored in {@link ConnectionManager}.
  */
 public class ContextListener implements ServletContextListener {
+    public static final String CONNECTION_MANAGER_CONTEXT_NAME = "connectionManager";
+    public static final String DATABASE_MANAGER_CONTEXT_NAME = "databaseManager";
+    public static final String COMMANDS_MANAGER_CONTEXT_NAME = "commandsManager";
+
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(getCurrentClassName());
 
 	public void contextInitialized(ServletContextEvent sce) {
         Logger.info(logger, "On servlet context initialized");
 
-		ServletContext servletContext = sce.getServletContext();
-		SqlErrorHandler errorHandler = new PostgreSqlErrorHandler();
 
-		String dbConfigurationFileProperties = servletContext.getInitParameter("databaseProperties");
-        DatabaseConfiguration databaseConfiguration;
+        ServletContext servletContext = sce.getServletContext();
+        XmlWebApplicationContext webApplicationContext = (XmlWebApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        webApplicationContext.registerShutdownHook();
 
-        try {
-            PropertiesLoader loader = new PropertiesLoader(dbConfigurationFileProperties);
-            loader.load();
+        servletContext.setAttribute(CONNECTION_MANAGER_CONTEXT_NAME, webApplicationContext.getBean("connectionManager"));
+        servletContext.setAttribute(DATABASE_MANAGER_CONTEXT_NAME, webApplicationContext.getBean("databaseManager"));
+        servletContext.setAttribute(COMMANDS_MANAGER_CONTEXT_NAME, webApplicationContext.getBean("commandsManager"));
 
-            databaseConfiguration = new FilePropertiesDatabaseConfiguration(loader.properties());
-            servletContext.setAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER, new ConnectionManager(databaseConfiguration, errorHandler));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-		servletContext.setAttribute(WebAppAttributes.DATABASE_MANAGER, new PostgreSQLManager(errorHandler));
-
-		Logger.info(logger, "On servlet context initialized done");
+        Logger.info(logger, "On servlet context initialized done");
 	}
 
 	public void contextDestroyed(ServletContextEvent sce) {
 		Logger.info(logger, "On servlet context destroy");
 
-		ServletContext servletContext = sce.getServletContext();
-
-		ConnectionManager connectionManager = (ConnectionManager) servletContext
-				.getAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
-
-		connectionManager.removeAll();
-
-		servletContext.removeAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
-		servletContext.removeAttribute(WebAppAttributes.DATABASE_MANAGER);
+        XmlWebApplicationContext webApplicationContext = (XmlWebApplicationContext) WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext());
+        webApplicationContext.destroy();
 
 		Logger.info(logger, "On servlet context destroy done");
 	}

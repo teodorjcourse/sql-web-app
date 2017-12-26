@@ -135,7 +135,6 @@ public class HTMLTableFormatter {
 			uidIndex = c.index();
 		}
 
-//		builder.append("<tr>");
 		for (int i = 0; i < rowCells.size(); i++) {
 			if (uidIndex == i) {
 				continue;
@@ -145,7 +144,6 @@ public class HTMLTableFormatter {
 			builder.append(rowCells.get(i).value());
 			builder.append("</td>");
 		}
-//		builder.append("</tr>");
 
 		return builder;
 	}

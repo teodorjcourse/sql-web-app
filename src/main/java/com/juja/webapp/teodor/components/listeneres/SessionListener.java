@@ -2,9 +2,9 @@ package com.juja.webapp.teodor.components.listeneres;
 import com.juja.webapp.teodor.utils.Logger;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
-import com.juja.webapp.teodor.WebAppAttributes;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
@@ -13,7 +13,7 @@ import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
 
 /**
  *
- * When user session is expired SessionListener will close connection and remove all attributes associated with session.
+ * When user session is expired SessionListener will close connection
  */
 public class SessionListener implements HttpSessionListener {
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(getCurrentClassName());
@@ -26,12 +26,10 @@ public class SessionListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent se) {
 		HttpSession session = se.getSession();
 
-		Logger.info(logger, "Destroy session: " + session.getId());
+        WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
+        ConnectionManager connectionManager = (ConnectionManager) webApplicationContext.getBean("connectionManager");
 
-		ServletContext servletContext = session.getServletContext();
-
-		ConnectionManager connectionManager = (ConnectionManager) servletContext
-				.getAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
+        Logger.info(logger, "Destroy session: " + session.getId());
 
 		try {
 			Logger.info(logger, session.getId() + "Close conection");
@@ -41,9 +39,6 @@ public class SessionListener implements HttpSessionListener {
 		} catch (DataBaseRequestException e) {
 			Logger.error(logger, "error on destroy session", e);
 		}
-
-		session.removeAttribute(WebAppAttributes.USER_SESSION);
-
 
 		Logger.info(logger, "Destroy session: " + session.getId() + " done");
 	}

@@ -1,7 +1,6 @@
 package com.juja.webapp.teodor.controller.commands;
 
-
-import com.juja.webapp.teodor.WebAppAttributes;
+import com.juja.webapp.teodor.components.listeneres.ContextListener;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.dao.DataBaseManager;
@@ -36,14 +35,7 @@ public abstract class Command {
 
 	public final void execute()
             throws DataBaseRequestException, ServletException, IOException {
-		validateCommandArguments();
 		executeInternal();
-	}
-
-	private void validateCommandArguments()
-			throws DataBaseRequestException
-	{
-
 	}
 
 	protected abstract void executeInternal() throws DataBaseRequestException, ServletException, IOException;
@@ -65,7 +57,7 @@ public abstract class Command {
 
     public final ConnectionManager connectionManager(HttpSession httpSession) {
         return (ConnectionManager) httpSession.getServletContext()
-                .getAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
+                .getAttribute(ContextListener.CONNECTION_MANAGER_CONTEXT_NAME);
     }
 
     public final Connection connection() {
@@ -78,7 +70,7 @@ public abstract class Command {
 
     public final DataBaseManager dataBaseManager(HttpSession httpSession) {
         return (DataBaseManager) httpSession.getServletContext()
-                .getAttribute(WebAppAttributes.DATABASE_MANAGER);
+                .getAttribute(ContextListener.DATABASE_MANAGER_CONTEXT_NAME);
     }
 
     public final ResponseProcessor createResponseProcessor() {

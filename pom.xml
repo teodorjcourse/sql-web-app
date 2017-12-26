@@ -17,7 +17,6 @@
     </properties>
 
 
-
     <build>
 
         <finalName>${project.artifactId}</finalName>
@@ -54,11 +53,19 @@
 
     <dependencies>
 
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-context</artifactId>-->
+            <!--<version>4.3.13.RELEASE</version>-->
+        <!--</dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-web</artifactId>
             <version>4.3.13.RELEASE</version>
         </dependency>
+
 
 
         <dependency>

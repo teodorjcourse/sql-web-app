@@ -3,7 +3,6 @@ package com.juja.webapp.teodor.controller.commands;
 import com.juja.webapp.teodor.controller.response.JSONResponse;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
-import org.json.simple.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

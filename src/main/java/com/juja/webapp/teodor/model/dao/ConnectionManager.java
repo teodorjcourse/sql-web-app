@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 public class ConnectionManager {
+    StringBuilder connectionString;
 	private SqlErrorHandler errorHandler;
 	private DatabaseConfiguration configuration;
 
@@ -19,6 +20,13 @@ public class ConnectionManager {
 		this.activeConnections = new HashMap<>();
 		this.errorHandler = errorHandler;
 		this.configuration = configuration;
+
+        this.connectionString = new StringBuilder();
+        this.connectionString.append(configuration.connectionString());
+        this.connectionString.append(configuration.host());
+        this.connectionString.append(":");
+        this.connectionString.append(configuration.port());
+        this.connectionString.append("/");
 	}
 
 	public void createConnection(HttpSession session, String username, String password)
@@ -52,7 +60,7 @@ public class ConnectionManager {
 	{
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(configuration.connectionString()).append(database);
+		sb.append(connectionString).append(database);
 
 		try {
 			Connection connection = DriverManager.getConnection(sb.toString(), username, password);
@@ -95,7 +103,7 @@ public class ConnectionManager {
 		activeConnections.remove(session);
 	}
 
-	public void removeAll() {
+	public void destroy() {
 		activeConnections.clear();
 	}
 

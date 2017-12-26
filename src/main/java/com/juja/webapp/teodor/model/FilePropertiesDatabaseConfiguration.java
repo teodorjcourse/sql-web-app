@@ -41,15 +41,6 @@ public class FilePropertiesDatabaseConfiguration implements DatabaseConfiguratio
 
     @Override
     public String connectionString() {
-//        if (connectionString == null) {
-//            connectionString = new StringBuilder();
-//            connectionString.append(properties.getProperty(JDBC_CONNECTION_STRING));
-//            connectionString.append(host());
-//            connectionString.append(":");
-//            connectionString.append(port());
-//            connectionString.append("/");
-//        }
-
         return properties.getProperty(JDBC_CONNECTION_STRING);
     }
 

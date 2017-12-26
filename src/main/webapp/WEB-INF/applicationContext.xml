@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="sqlErrorHandler" class="com.juja.webapp.teodor.model.dao.PostgreSqlErrorHandler"/>
+
+    <bean id="databaseConfigurationBean" class="com.juja.webapp.teodor.model.FilePropertiesDatabaseConfiguration">
+        <constructor-arg name="resourcePath" value="postgresql.properties"/>
+    </bean>
+
+
+    <bean id="connectionManager" class="com.juja.webapp.teodor.model.dao.ConnectionManager" destroy-method="destroy">
+        <constructor-arg name="configuration" ref="databaseConfigurationBean"/>
+        <constructor-arg name="errorHandler" ref="sqlErrorHandler"/>
+    </bean>
+
+
+    <bean id="databaseManager" class="com.juja.webapp.teodor.model.dao.PostgreSQLManager">
+        <constructor-arg name="errorHandler" ref="sqlErrorHandler"/>
+    </bean>
+
+    <bean id="commandsFactory" class="com.juja.webapp.teodor.controller.commands.CommandsFactory">
+        <constructor-arg>
+            <util:map map-class="java.util.HashMap">
+                <entry key="connect" value="com.juja.webapp.teodor.controller.commands.ConnectCommand"/>
+                <entry key="close" value="com.juja.webapp.teodor.controller.commands.CloseConnection"/>
+                <entry key="get_tables" value="com.juja.webapp.teodor.controller.commands.GetTablesCommand"/>
+                <entry key="select" value="com.juja.webapp.teodor.controller.commands.SelectTableCommand"/>
+                <entry key="insert" value="com.juja.webapp.teodor.controller.commands.InsertRowCommand"/>
+                <entry key="update" value="com.juja.webapp.teodor.controller.commands.UpdateTableCommand"/>
+                <entry key="delete" value="com.juja.webapp.teodor.controller.commands.DeleteRowCommand"/>
+            </util:map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="commandsManager" class="com.juja.webapp.teodor.controller.commands.CommandsManager">
+        <constructor-arg name="factory" ref="commandsFactory"/>
+    </bean>
+
+</beans>

@@ -40,7 +40,6 @@ public class ConnectCommand extends Command {
     {
         HttpSession httpSessoin = httpRequest.getSession();
 
-        ServletContext servletContext = httpSessoin.getServletContext();
         ConnectionManager connectionManager = connectionManager();
 
         ConnectionInfo connectionInfo = connectionManager.getSessionConnectionInfo(httpSessoin);

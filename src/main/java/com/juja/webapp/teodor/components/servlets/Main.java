@@ -1,11 +1,12 @@
 package com.juja.webapp.teodor.components.servlets;
 import com.juja.webapp.teodor.Links;
-import com.juja.webapp.teodor.WebAppAttributes;
-import com.juja.webapp.teodor.controller.commands.Commands;
+import com.juja.webapp.teodor.components.listeneres.ContextListener;
+import com.juja.webapp.teodor.controller.commands.CommandsManager;
 import com.juja.webapp.teodor.controller.response.ResponseProcessor;
 import com.juja.webapp.teodor.model.dao.ConnectionInfo;
 import com.juja.webapp.teodor.model.dao.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
+import com.juja.webapp.teodor.model.exceptions.RequestError;
 import com.juja.webapp.teodor.utils.StringUtils;
 
 import javax.servlet.RequestDispatcher;
@@ -21,18 +22,22 @@ import static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName;
 public class Main extends HttpServletBase  {
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(getCurrentClassName());
 
+    private ConnectionManager connectionManager;
+    private CommandsManager commandsManager;
 
-	@Override
+    @Override
+    public void init() throws ServletException {
+        connectionManager = (ConnectionManager) getServletContext().getAttribute(ContextListener.CONNECTION_MANAGER_CONTEXT_NAME);
+        commandsManager = (CommandsManager) getServletContext().getAttribute(ContextListener.COMMANDS_MANAGER_CONTEXT_NAME);
+    }
+
+    @Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
 
         trInfo(logger, session.getId() + ": got request; uri = " + req.getRequestURI());
 
-        ConnectionManager connectionManager = (ConnectionManager) session.getServletContext()
-                .getAttribute(WebAppAttributes.DATABASE_CONNECTION_MANAGER);
-
         ConnectionInfo connectionInfo = connectionManager.getSessionConnectionInfo(session);
-
 
         try {
             if (connectionInfo != null && connectionInfo.connected()) {
@@ -64,11 +69,12 @@ public class Main extends HttpServletBase  {
             String cmd = StringUtils.removeSlashes(actionType);
             if (cmd != null) {
                 try {
-                    new Commands().tryToExecute(cmd, req, resp);
+                    commandsManager.tryToExecute(cmd, req, resp);
                 } catch (DataBaseRequestException e) {
                     processDatabaseRequestError(e, req, resp);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    trError(logger, e.getMessage());
+                    new ResponseProcessor().sendErrorResponse(new DataBaseRequestException(RequestError.REQUEST_ERROR), req, resp, "Something went wrong!");
                 }
             }
         } else {
@@ -82,7 +88,7 @@ public class Main extends HttpServletBase  {
 	    if (req.getMethod().equals("POST")) {
 	        new ResponseProcessor().sendErrorResponse(e, req, resp, e.getMessage());
         } else {
-	        e.printStackTrace();
+	        trError(logger, e.getMessage());
         }
     }
 }
