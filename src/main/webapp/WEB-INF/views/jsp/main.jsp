@@ -1,25 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-<%@ page import="com.juja.webapp.teodor.Links" %>
-<%@ page import="com.juja.webapp.teodor.I18n" %>
-<%@ page import="com.juja.webapp.teodor.Keys" %>
 
 <html>
 <head>
     <title>SQl Web Application</title>
 
-    <%@ include file="../html/bootstrap_headers.html" %>
-    <%@ include file="../html/formvalidation_headers.html" %>
-    <%@ include file="../html/bootstrap_dialogs_headers.html" %>
+    <%@ include file="/resources/html/bootstrap_headers.html" %>
 
-    <script type="text/javascript" src="/sql-web-app/js/xml_http_request_helper.js"></script>
+    <%@ include file="/resources/html/bootstrap_headers.html" %>
+    <%@ include file="/resources/html/formvalidation_headers.html" %>
+    <%@ include file="/resources/html/bootstrap_dialogs_headers.html" %>
+
+    <script type="text/javascript" src="<c:url value="/resources/js/xml_http_request_helper.js" /> "></script>
 </head>
 <body>
 
     <div id="page-container">
         <div class="list-group">
-            <a href="<%= Links.ACTION_GET_TABLES_REQUEST + "p=all" %>" class="list-group-item"><%= I18n.text(Keys.MENU_ITEM_TABLES) %></a>
-            <%--<a href="<%= Links.ACTION_GET_TABLES_REQUEST %>" class="list-group-item"><%= I18n.text(Keys.MENU_ITEM_INFO) %></a>--%>
+            <a href="/sql-web-app/action/get_tables?p=all" class="list-group-item">Available tables</a>
         </div>
     </div>
 

@@ -1,23 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="org.apache.log4j.Logger" %>
 <%@ page import="static com.juja.webapp.teodor.utils.ClassNameUtil.getCurrentClassName" %>
-<%@ page errorPage = "ErrorPage.jsp" %>
+<%@ page errorPage = "error_page.jsp" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>${tableName}</title>
-    <%@ include file="../html/bootstrap_headers.html" %>
-    <%@ include file="../html/bootstrap_dialogs_headers.html" %>
+    <%@ include file="/resources/html/bootstrap_headers.html" %>
+    <%@ include file="/resources/html/bootstrap_dialogs_headers.html" %>
 
-
-    <script type="text/javascript" src="/sql-web-app/js/xml_http_request_helper.js"></script>
-    <script type="text/javascript" src="/sql-web-app/js/RequestController.js"></script>
+    <%--<script type="text/javascript" src="<c:url value="/resources/js/xml_http_request_helper.js" /> "></script>--%>
+    <script type="text/javascript" src="<c:url value="/resources/js/RequestController.js" /> "></script>
 </head>
 <body>
     <%!
         public static final Logger logger  = Logger.getLogger(getCurrentClassName());
     %>
     <h1>Режим редактирования таблиц: ${tableName}</h1>
+    <h2>Редактирование возможно только для таблиц, имеющих поле <b>"uid"</b></h2>
 
     <div class="modal fade" id="modal-form" role="dialog" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog">
@@ -33,7 +33,7 @@
                     <form id="login_form" name="login_form" >
 
                         <div class="form-group hide" id="template">
-                            <label for="fake">fsefsefsf</label>
+                            <label for="fake">fake</label>
                             <input type="text" class="form-control" id="fake"  name="" placeholder="fake">
                         </div>
 
@@ -62,7 +62,7 @@
 
     </table>
 
-    <script type="text/javascript" src="/sql-web-app/js/xml_http_request_helper.js"></script>
+    <%--<script type="text/javascript" src="/sql-web-app/js/xml_http_request_helper.js"></script>--%>
 
     <script>
         var rowId;
@@ -126,7 +126,8 @@
         }
 
         function updateTable(httpRequest) {
-            if (httpRequest.readyState == XMLHttpRequestState.DONE) {
+            // XMLHttpRequestState.DONE == 4
+            if (httpRequest.readyState == 4) {
                 try {
                     var obj = JSON.parse(httpRequest.responseText);
 
@@ -268,11 +269,12 @@
 
             try {
                 request.onreadystatechange = function () {
-                    if (this.readyState == XMLHttpRequestState.DONE) {
+                    if (this.readyState == 4) {
                         try {
-                            var obj = JSON.parse(this.responseText);
                             console.log(this.responseText);
+                            var obj = JSON.parse(this.responseText);
                         } catch (error) {
+                            console.log(error.message)
                         }
                     }
                 }
@@ -311,7 +313,7 @@
 
             try {
                 request.onreadystatechange = function() {
-                    if (this.readyState == XMLHttpRequestState.DONE) {
+                    if (this.readyState == 4) {
                         try {
                             var obj = JSON.parse(this.responseText);
 
@@ -363,6 +365,8 @@
                 $("#table").find("tbody").append(newElement);
                 $("#new").css('background-color', 'green');
 
+                console.log(queryString);
+
                 request.open("POST", "${pageContext.request.contextPath}/action/insert?name=${tableName}&cols=" +  encodeURIComponent(queryString), true);
                 request.send(null);
             } catch(e) {
@@ -377,7 +381,7 @@
 
             try {
                 request.onreadystatechange = function () {
-                    if (this.readyState == XMLHttpRequestState.DONE) {
+                    if (this.readyState == 4) {
                         try {
                             var obj = JSON.parse(this.responseText);
 

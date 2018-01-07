@@ -1,8 +1,8 @@
 package com.juja.webapp.teodor.components.listeneres;
 
+import com.juja.webapp.teodor.components.managers.ConnectionManager;
 import com.juja.webapp.teodor.model.dao.*;
 import com.juja.webapp.teodor.utils.Logger;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
@@ -27,7 +27,7 @@ public class ContextListener implements ServletContextListener {
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(getCurrentClassName());
 
 	public void contextInitialized(ServletContextEvent sce) {
-        Logger.info(logger, "On servlet context initialized");
+//        Logger.info(logger, "On servlet context initialized");
 
 
         ServletContext servletContext = sce.getServletContext();
@@ -38,15 +38,15 @@ public class ContextListener implements ServletContextListener {
         servletContext.setAttribute(DATABASE_MANAGER_CONTEXT_NAME, webApplicationContext.getBean("databaseManager"));
         servletContext.setAttribute(COMMANDS_MANAGER_CONTEXT_NAME, webApplicationContext.getBean("commandsManager"));
 
-        Logger.info(logger, "On servlet context initialized done");
+//        Logger.info(logger, "On servlet context initialized done");
 	}
 
 	public void contextDestroyed(ServletContextEvent sce) {
-		Logger.info(logger, "On servlet context destroy");
+//		Logger.info(logger, "On servlet context destroy");
 
         XmlWebApplicationContext webApplicationContext = (XmlWebApplicationContext) WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext());
         webApplicationContext.destroy();
 
-		Logger.info(logger, "On servlet context destroy done");
+//		Logger.info(logger, "On servlet context destroy done");
 	}
 }

@@ -1,28 +1,33 @@
 package com.juja.webapp.teodor.utils;
 
 public class Logger {
+    private org.apache.log4j.Logger logger;
 
-    public static void info(org.apache.log4j.Logger logger, String message) {
+    public Logger(String name) {
+        logger = org.apache.log4j.Logger.getLogger(name);
+    }
+
+    public void info(String message) {
         if (logger.isInfoEnabled()) {
             logger.info(message);
         }
     }
 
-    public static void debug(org.apache.log4j.Logger logger, String message) {
+    public void debug(String message) {
         if (logger.isDebugEnabled()) {
             logger.debug(message);
         }
     }
 
-    public static void error(org.apache.log4j.Logger logger, String message) {
+    public void error(String message) {
         logger.error(message);
     }
 
-    public static void error(org.apache.log4j.Logger logger, String message, Throwable t) {
+    public void error(String message, Throwable t) {
         logger.error(message, t);
     }
 
-    public static void warn(org.apache.log4j.Logger logger, String message) {
+    public void warn(String message) {
         logger.warn(message);
     }
 }

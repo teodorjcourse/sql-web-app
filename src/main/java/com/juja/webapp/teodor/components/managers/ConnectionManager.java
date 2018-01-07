@@ -1,7 +1,11 @@
-package com.juja.webapp.teodor.model.dao;
+package com.juja.webapp.teodor.components.managers;
 
+import com.juja.webapp.teodor.model.dao.ConnectionInfo;
+import com.juja.webapp.teodor.model.dao.DatabaseConfiguration;
+import com.juja.webapp.teodor.model.dao.SqlErrorHandler;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import com.juja.webapp.teodor.model.exceptions.RequestError;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Connection;
@@ -9,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+@Component(value = "connectManager")
 public class ConnectionManager {
     StringBuilder connectionString;
 	private SqlErrorHandler errorHandler;
@@ -88,7 +93,7 @@ public class ConnectionManager {
 
 		if (connectionInfo != null) {
 			try {
-                connectionInfo.connection.close();
+                connectionInfo.connection().close();
 			} catch (SQLException e) {
 				DataBaseRequestException requestException =
 						new DataBaseRequestException(RequestError.CLOSE_CONNECTION_ERROR);
@@ -113,20 +118,22 @@ public class ConnectionManager {
 }
 
 class DatabaseConnectionInfo extends ConnectionInfo {
+
+
 	public void setUsername(String value) {
-		this.username = value;
+		username = value;
 	}
 
 	public void setDatabase(String value) {
-		this.database = value;
+		database = value;
 	}
 
 	public void setPassword(String value) {
-		this.password = value;
+		password = value;
 	}
 
 	public void setConnection(Connection value) {
-		this.connection = value;
+		connection = value;
 	}
 
 

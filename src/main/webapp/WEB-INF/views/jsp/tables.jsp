@@ -1,17 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="com.juja.webapp.teodor.I18n" %>
-<%@ page import="com.juja.webapp.teodor.Keys" %>
 
-<%@ page errorPage = "ErrorPage.jsp" %>
+<%@ page errorPage = "error_page.jsp" %>
 <html>
 <head>
-    <title><%= I18n.text(Keys.PAGE_TITLE_TABLES) %></title>
-    <%@ include file="../html/bootstrap_headers.html" %>
+    <title>Available tables</title>
+    <%@ include file="/resources/html/bootstrap_headers.html" %>
 </head>
 <body>
     <div>
-       <h1>Доступные таблицы</h1>
+       <h1>Available tables</h1>
     </div>
 
     <div class="list-group">

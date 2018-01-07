@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <div class="" id="content-container">
     <div id="modal-form-container">
         <!-- Modal -->
@@ -7,7 +9,7 @@
 
                     <div class="modal-header">
                         <%--<button type="button" class="close" data-dismiss="modal">x</button>--%>
-                        <h3 class="modal-title" id="modalLabel"><% out.print(I18n.text(Keys.FORM_CONNECT_TITLE)); %></h3>
+                        <h3 class="modal-title" id="modalLabel">Connect Page</h3>
                     </div>
 
 
@@ -15,17 +17,17 @@
                         <form id="login_form" name="login_form" >
 
                             <div class="form-group">
-                                <label for="db-user-name"><% out.print(I18n.text(Keys.USERNAME_LABEL)); %></label>
-                                <input type="text" class="form-control" id="db-user-name" name="username" placeholder="<% out.print(I18n.text(Keys.USERNAME_TXT)); %>">
+                                <label for="db-user-name">Username</label>
+                                <input type="text" class="form-control" id="db-user-name" name="username" placeholder="Username">
                             </div>
 
 
                             <div class="form-group">
-                                <label for="db-password"><% out.print(I18n.text(Keys.PASSWORD_LABEL)); %></label>
-                                <input type="password" class="form-control" id="db-password"  name="password" placeholder="<% out.print(I18n.text(Keys.PASSWORD_TXT)); %>">
+                                <label for="db-password">Password</label>
+                                <input type="password" class="form-control" id="db-password"  name="password" placeholder="password">
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block" id="button-submit-connect"><% out.print(I18n.text(Keys.CONNECT_TO_DATABASE_TXT)); %></button>
+                            <button type="submit" class="btn btn-primary btn-block" id="button-submit-connect">Connect to Database</button>
 
                         </form>
                     </div>
@@ -37,7 +39,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/sql-web-app/js/xml_http_request_helper.js"></script>
+<script type="text/javascript" src="<c:url value="/resources/js/xml_http_request_helper.js"/>"></script>
 
 <script>
     $(window).on('load',function(){
@@ -63,14 +65,14 @@
                     username: {
                         validators: {
                             notEmpty: {
-                                message: '<% out.print(I18n.text(Keys.USERNAME_REQUIRED_ERROR_TXT)); %>'
+                                message: 'user name error'
                             }
                         }
                     },
                     password: {
                         validators: {
                             notEmpty: {
-                                message: "<% out.print(I18n.text(Keys.PASSWORD_REQUIRED_ERROR_TXT)); %>"
+                                message: "password error"
                             }
                         }
                     }
@@ -87,8 +89,7 @@
             var username = $("#db-user-name").val();
             var password = $("#db-password").val();
 
-            var url = "<% out.print(Links.ACTION_CONNECT_REQUEST); %>"
-                + "username=" + username + "&" + "password=" + password;
+            var url = "action/connect?" + "username=" + username + "&" + "password=" + password;
 
             sendAsyncPostRequest(url);
 
@@ -113,7 +114,10 @@
         // TODO REFACTOR THIS CODE.  ITS MESSY !!!
         // FIXME Remove button first, than wait until modal is hiding and remove form on hidden.bs.modal event
         function onGetResponse(httpRequest) {
-            if (httpRequest.readyState == XMLHttpRequestState.DONE) {
+            // TODO for some reasons XMLHttpRequestState is not defained
+            // even if <%--<script type="text/javascript" src="<c:url value="/resources/js/xml_http_request_helper.js"/>"></script> --%> included
+            //
+            if (httpRequest.readyState == 4) {
 
                 try {
                     var obj = JSON.parse(httpRequest.responseText);

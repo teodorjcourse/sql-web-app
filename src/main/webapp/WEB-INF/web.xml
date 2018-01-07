@@ -6,15 +6,11 @@
 
     <display-name>Database Manager</display-name>
 
-    <filter>
-        <filter-name>request-filter</filter-name>
-        <filter-class>com.juja.webapp.teodor.components.filters.RequestFilter</filter-class>
-    </filter>
 
-    <filter-mapping>
-        <filter-name>request-filter</filter-name>
-        <url-pattern>/</url-pattern>
-    </filter-mapping>
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>WEB-INF/rootContext.xml</param-value>
+    </context-param>
 
     <!--The listeners are called in the order they are specified in web.xml-->
     <!--As we try to retrieve WebApplicationContext at ContextListener so the ContextLoaderListener should be called first-->
@@ -24,48 +20,19 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <listener>
-        <description>Context Listener</description>
-        <listener-class>com.juja.webapp.teodor.components.listeneres.ContextListener</listener-class>
-    </listener>
-
-    <listener>
-        <description>Session Listener</description>
-        <listener-class>
-            com.juja.webapp.teodor.components.listeneres.SessionListener
-        </listener-class>
-    </listener>
-
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>WEB-INF/applicationContext.xml</param-value>
-    </context-param>
-
-    <context-param>
-        <!--
-        just to try !
-        contextClass by default is XmlWebApplicationContext
-        -->
-        <param-name>contextClass</param-name>
-        <param-value>org.springframework.web.context.support.XmlWebApplicationContext</param-value>
-    </context-param>
-
-
-    <welcome-file-list>
-        <welcome-file>main.html</welcome-file>
-        <welcome-file>main.jsp</welcome-file>
-    </welcome-file-list>
-
     <servlet>
-        <servlet-name>client-requests</servlet-name>
-        <servlet-class>com.juja.webapp.teodor.components.servlets.Main</servlet-class>
+        <servlet-name>frontServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value></param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>client-requests</servlet-name>
-        <url-pattern>/action/*</url-pattern>
-        <url-pattern>/main</url-pattern>
+        <servlet-name>frontServlet</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
 

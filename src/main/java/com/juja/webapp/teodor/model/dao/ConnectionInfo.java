@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class ConnectionInfo {
-	String database;
-	String username;
-	String password;
+	protected String database;
+	protected String username;
+	protected String password;
 
-	Connection connection;
+	protected Connection connection;
 
 	public String database() {
 		return this.database;
@@ -26,7 +26,11 @@ public abstract class ConnectionInfo {
 		return this.connection;
 	}
 
-	public boolean connected() throws SQLException {
-		return this.connection != null && !this.connection.isClosed();
+	public boolean connected() {
+		try {
+			return this.connection != null && !this.connection.isClosed();
+		} catch (Throwable any) {
+			return false;
+		}
 	}
 }

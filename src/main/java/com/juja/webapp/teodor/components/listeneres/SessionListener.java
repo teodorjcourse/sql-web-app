@@ -1,6 +1,6 @@
 package com.juja.webapp.teodor.components.listeneres;
 import com.juja.webapp.teodor.utils.Logger;
-import com.juja.webapp.teodor.model.dao.ConnectionManager;
+import com.juja.webapp.teodor.components.managers.ConnectionManager;
 import com.juja.webapp.teodor.model.exceptions.DataBaseRequestException;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -20,7 +20,7 @@ public class SessionListener implements HttpSessionListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {
-        Logger.info(logger, "Session created: id = " + se.getSession().getId());
+//        Logger.info(logger, "Session created: id = " + se.getSession().getId());
 	}
 
 	public void sessionDestroyed(HttpSessionEvent se) {
@@ -29,17 +29,17 @@ public class SessionListener implements HttpSessionListener {
         WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
         ConnectionManager connectionManager = (ConnectionManager) webApplicationContext.getBean("connectionManager");
 
-        Logger.info(logger, "Destroy session: " + session.getId());
+//        Logger.info(logger, "Destroy session: " + session.getId());
 
 		try {
-			Logger.info(logger, session.getId() + "Close conection");
+//			Logger.info(logger, session.getId() + "Close conection");
 			connectionManager.closeConnection(session);
 			connectionManager.removeConnection(session);
-			Logger.info(logger, session.getId() + "Close conection done");
+//			Logger.info(logger, session.getId() + "Close conection done");
 		} catch (DataBaseRequestException e) {
-			Logger.error(logger, "error on destroy session", e);
+//			Logger.error(logger, "error on destroy session", e);
 		}
 
-		Logger.info(logger, "Destroy session: " + session.getId() + " done");
+//		Logger.info(logger, "Destroy session: " + session.getId() + " done");
 	}
 }
